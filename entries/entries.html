@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Work Entries - Daily Work Log</title>
+  <link rel="stylesheet" href="entries.css">
+</head>
+<body>
+  <div class="entries-page-container">
+    <!-- Header -->
+    <header class="page-header">
+      <div class="header-left">
+        <h1 class="page-title">Work Entries</h1>
+      </div>
+      <div class="header-right">
+        <!-- Export Dropdown -->
+        <div class="dropdown-container">
+          <button id="btnExportDashboard" class="btn-secondary-glow" title="Export entries data">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Export ▾</span>
+          </button>
+          <div id="dashboardExportMenu" class="dashboard-dropdown-menu hidden">
+            <button id="btnExportCSV" class="dropdown-item">Export as CSV</button>
+            <button id="btnExportJSON" class="dropdown-item">Export as JSON</button>
+          </div>
+        </div>
+
+        <!-- Copy Weekly Updates -->
+        <button id="btnWeeklyCopy" class="btn-secondary-glow" title="Copy weekly update grouped by project for Teams">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          <span>Copy Weekly Updates</span>
+        </button>
+
+        <!-- New Entry Button -->
+        <button id="btnNewEntry" class="btn-primary-purple" title="Create new work entry">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>+ New entry</span>
+        </button>
+
+        <!-- Settings Shortcut -->
+        <button id="btnOpenSettings" class="btn-icon-nav" title="Settings & Configuration" aria-label="Open Settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Today's Tasks Progress Card -->
+    <section class="today-hours-card">
+      <div class="hours-header">
+        <span class="hours-label">TODAY'S TASKS</span>
+        <span id="todayTasksValue" class="hours-value">0 / 0 Completed</span>
+      </div>
+      <div class="hours-track">
+        <div id="todayTasksFill" class="hours-fill" style="width: 0%;"></div>
+      </div>
+    </section>
+
+    <!-- Filters Section -->
+    <section class="filters-card">
+      <div class="filters-group-left">
+        <!-- Week Presets: Previous Week, This Week, Next Week -->
+        <div class="filter-item">
+          <label class="filter-label">WEEK FILTER</label>
+          <div class="week-presets-group">
+            <button type="button" id="btnPrevWeek" class="week-pill-btn" title="View previous week (Sunday to Saturday)">◀ Previous Week</button>
+            <button type="button" id="btnThisWeek" class="week-pill-btn active" title="View this week (Sunday to Saturday)">This Week</button>
+            <button type="button" id="btnNextWeek" class="week-pill-btn" title="View next week (Sunday to Saturday)">Next Week ▶</button>
+          </div>
+        </div>
+
+        <!-- FROM Date -->
+        <div class="filter-item">
+          <label for="filterFromDate" class="filter-label">FROM</label>
+          <div class="date-input-container">
+            <input type="date" id="filterFromDate" class="filter-date-input" required>
+          </div>
+        </div>
+
+        <!-- TO Date -->
+        <div class="filter-item">
+          <label for="filterToDate" class="filter-label">TO</label>
+          <div class="date-input-container">
+            <input type="date" id="filterToDate" class="filter-date-input" required>
+          </div>
+        </div>
+
+        <!-- PROJECT Filter -->
+        <div class="filter-item">
+          <label for="filterProject" class="filter-label">PROJECT</label>
+          <div class="select-box-wrapper">
+            <select id="filterProject" class="filter-select">
+              <option value="all">All projects</option>
+            </select>
+            <span class="select-chevron">▾</span>
+          </div>
+        </div>
+
+        <!-- PLATFORM Filter -->
+        <div class="filter-item">
+          <label for="filterPlatform" class="filter-label">PLATFORM</label>
+          <div class="select-box-wrapper">
+            <select id="filterPlatform" class="filter-select">
+              <option value="all">All platforms</option>
+            </select>
+            <span class="select-chevron">▾</span>
+          </div>
+        </div>
+
+        <!-- STATUS Filter -->
+        <div class="filter-item">
+          <label for="filterStatus" class="filter-label">STATUS</label>
+          <div class="select-box-wrapper">
+            <select id="filterStatus" class="filter-select">
+              <option value="all">All statuses</option>
+              <option value="completed">Completed</option>
+              <option value="in_progress">In Progress</option>
+              <option value="todo">To Do</option>
+            </select>
+            <span class="select-chevron">▾</span>
+          </div>
+        </div>
+
+        <!-- Clear Link -->
+        <button id="btnClearFilters" class="btn-clear-filters" title="Reset filter to current week (Sunday to Saturday)">Clear</button>
+      </div>
+
+      <div class="filters-group-right">
+        <span id="entriesStatsText" class="entries-stats-text">0 entries</span>
+      </div>
+    </section>
+
+    <!-- Table Section -->
+    <main class="table-card">
+      <div class="table-responsive">
+        <table class="entries-table" id="entriesTable">
+          <thead>
+            <tr>
+              <th class="col-date">DATE</th>
+              <th class="col-project">PROJECT</th>
+              <th class="col-platform">PLATFORM</th>
+              <th class="col-task">TASK</th>
+              <th class="col-status">STATUS</th>
+              <th class="col-actions">ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody id="entriesTableBody">
+            <!-- Dynamically rendered -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty State -->
+      <div id="tableEmptyState" class="table-empty hidden">
+        <div class="empty-icon-art">📋</div>
+        <h3 class="empty-title">No entries found for the selected filter</h3>
+        <p class="empty-desc">Try clearing the filters or click <strong>+ New entry</strong> to add work items.</p>
+        <button id="btnEmptyReset" class="btn-secondary-action">Reset to Current Week</button>
+      </div>
+    </main>
+
+    <!-- Modal 1: Add / Edit Entry (Wizard) -->
+    <div id="modalEntry" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalEntryTitle">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h2 id="modalEntryTitle">Add New Entry</h2>
+          <button type="button" class="btn-close-modal" id="btnEntryModalClose" aria-label="Close modal">×</button>
+        </div>
+        <form id="formEntry" class="modal-body" novalidate>
+          <input type="hidden" id="entryEditId" value="">
+
+          <div class="form-grid-row">
+            <div class="form-field">
+              <label for="entryInputDate">Date</label>
+              <input type="date" id="entryInputDate" required>
+            </div>
+            <div class="form-field">
+              <label for="entrySelectProject">Project</label>
+              <select id="entrySelectProject" required>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="entrySelectPlatform">Platform</label>
+            <select id="entrySelectPlatform" required>
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="entryInputTask">Task Description</label>
+            <input type="text" id="entryInputTask" placeholder="What did you accomplish?" autocomplete="off" required>
+          </div>
+
+          <div class="form-field">
+            <label>Status</label>
+            <div class="status-radio-group" id="entryStatusGroup">
+              <label class="status-radio-pill active" data-status="completed">
+                <input type="radio" name="modalStatus" value="completed" checked>
+                <span class="status-bullet bullet-completed"></span> Completed
+              </label>
+              <label class="status-radio-pill" data-status="in_progress">
+                <input type="radio" name="modalStatus" value="in_progress">
+                <span class="status-bullet bullet-progress"></span> In Progress
+              </label>
+              <label class="status-radio-pill" data-status="todo">
+                <input type="radio" name="modalStatus" value="todo">
+                <span class="status-bullet bullet-todo"></span> To Do
+              </label>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" id="btnCancelEntryModal" class="btn-secondary">Cancel</button>
+            <button type="submit" id="btnSaveEntryModal" class="btn-primary-purple">Save Entry</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal 2: Weekly Copy Preview & Customize -->
+    <div id="modalWeeklyCopy" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalCopyTitle">
+      <div class="modal-dialog modal-dialog-lg">
+        <div class="modal-header">
+          <div>
+            <h2 id="modalCopyTitle">Weekly Work Updates</h2>
+            <p class="modal-sub">Formatted grouped by project, ready to paste into Teams or chat.</p>
+          </div>
+          <button type="button" class="btn-close-modal" id="btnWeeklyCopyModalClose" aria-label="Close modal">×</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="copy-options-bar">
+            <label class="copy-bracket-toggle">
+              <input type="checkbox" id="checkUseBrackets">
+              <span>Include brackets format (e.g. <code>{Project Name}</code>)</span>
+            </label>
+            <span id="weeklyCopyItemCount" class="copy-item-count">0 tasks included</span>
+          </div>
+
+          <div class="code-preview-box">
+            <textarea id="weeklyCopyTextarea" class="weekly-copy-textarea" rows="12" spellcheck="false"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" id="btnCloseWeeklyCopyModal" class="btn-secondary">Close</button>
+          <button type="button" id="btnConfirmCopyClipboard" class="btn-primary-purple">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span id="copyConfirmButtonText">Copy to Clipboard</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toastNotification" class="toast hidden" role="status" aria-live="polite">
+      <span id="toastIcon" class="toast-icon">✓</span>
+      <span id="toastMessage">Copied to clipboard!</span>
+    </div>
+  </div>
+
+  <script src="entries.js"></script>
+</body>
+</html>

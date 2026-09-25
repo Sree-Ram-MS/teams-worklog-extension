@@ -1,0 +1,7 @@
+{
+  "name": "daily-worklog-extension",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Daily Work Log Chrome Extension"
+}
